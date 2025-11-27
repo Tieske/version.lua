@@ -6,8 +6,7 @@ local ok, err
 ------------------------------------------
 -- strict and relaxed parsing
 ------------------------------------------
-local lua
-lua, err = version("Lua 5.3")
+local lua, _ = version("Lua 5.3")
 assert(tostring(lua) == "5.3")
 
 lua, err = version.strict("Lua 5.3")
