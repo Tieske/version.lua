@@ -41,6 +41,7 @@ jobs:
     - uses: luarocks/gh-actions-lua@v11
       with:
         luaVersion: ${{ matrix.luaVersion }}
+        luaCompileFlags: "MYCFLAGS=\"-U LUA_COMPAT_5_1 -U LUA_COMPAT_5_2 -U LUA_COMPAT_5_3 -U LUA_COMPAT_5_4\""
 
     - uses: luarocks/gh-actions-luarocks@v6
 

@@ -130,6 +130,10 @@ assert(not r1:matches("1.5"))
 assert(not r1:matches("0.5"))
 assert(tostring(r1) == "1.2 to 1.4.0")
 
+-- case from issue #3; https://github.com/Kong/version.lua/issues/3
+local r = version.range("1.30", "1.45")
+assert(r:matches("1.32"))
+
 ------------------------------------------
 -- Set object
 ------------------------------------------
