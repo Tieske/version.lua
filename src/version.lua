@@ -145,6 +145,9 @@ mt_version = {
       end
       return false
     end,
+    __le = function(a, b)
+      return not (b < a) -- luacheck: ignore
+    end,
     __tostring = function(self)
       return table_concat(self, ".")
     end,
