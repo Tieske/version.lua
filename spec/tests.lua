@@ -6,8 +6,7 @@ local ok, err
 ------------------------------------------
 -- strict and relaxed parsing
 ------------------------------------------
-local lua
-lua, err = version("Lua 5.3")
+local lua, _ = version("Lua 5.3")
 assert(tostring(lua) == "5.3")
 
 lua, err = version.strict("Lua 5.3")
@@ -130,6 +129,10 @@ assert(not r1:matches("0.4.0"))
 assert(not r1:matches("1.5"))
 assert(not r1:matches("0.5"))
 assert(tostring(r1) == "1.2 to 1.4.0")
+
+-- case from issue #3; https://github.com/Kong/version.lua/issues/3
+local r = version.range("1.30", "1.45")
+assert(r:matches("1.32"))
 
 ------------------------------------------
 -- Set object

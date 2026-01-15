@@ -1,0 +1,59 @@
+name: "Lua"
+
+concurrency:
+  # for PR's cancel the running task, if another commit is pushed
+  group: ${{ github.workflow }} ${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+on:
+  # build on PR and push-to-master. This works for short-lived branches, and saves
+  # CPU cycles on duplicated tests.
+  # For long-lived branches that diverge, you'll want to run on all pushes, not
+  # just on push-to-master.
+  pull_request: {}
+  push:
+    branches:
+    - master
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  tests:
+    name: Tests
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        luaVersion:
+        - "5.1"
+        - "5.2"
+        - "5.3"
+        - "5.4"
+        - "5.5"
+        - "luajit-2.1.0-beta3"
+
+    steps:
+    - uses: actions/checkout@master
+      with:
+        submodules: recursive
+
+    - uses: luarocks/gh-actions-lua@master
+      with:
+        luaVersion: ${{ matrix.luaVersion }}
+        luaCompileFlags: "MYCFLAGS=\"-U LUA_COMPAT_5_1 -U LUA_COMPAT_5_2 -U LUA_COMPAT_5_3 -U LUA_COMPAT_5_4\""
+
+    - uses: luarocks/gh-actions-luarocks@master
+      with:
+        luaRocksVersion: "3.13.0"
+
+    - name: dependencies
+      run: |
+        luarocks make
+
+    - name: test
+      run: |
+        lua ./spec/lua_versions.lua
+        lua ./spec/tests.lua
+
